@@ -2,29 +2,24 @@ import React from "react"
 import Node from "./Node"
 import '../App.css'
 
-const Layer = ({ nodes, onRemoveLayer, onAddNode, onRemoveNode }) => {
+function Layer({ layer, index, onRemoveLayer, onAddNode, onRemoveNode }) {
   const handleAddNode = () => {
-    onAddNode()
+    onAddNode(index)
   }
 
   const handleRemoveLayer = () => {
-    onRemoveLayer()
+    onRemoveLayer(index)
   }
 
   return (
-    <div className="layer">
-      <div className="layer-controls">
-        <button className="remove-layer-button" onClick={handleRemoveLayer}>Remove Layer</button>
-        <button className="add-node-button" onClick={handleAddNode}>Add Node</button>
+    <div>
+      <div>
+        <button onClick={handleAddNode}>Add Node</button>
+        <button onClick={handleRemoveLayer}>Remove Layer</button>
       </div>
-      <div className="nodes">
-        {nodes.map((node, nodeIndex) => (
-          <Node
-            key={nodeIndex}
-            onRemoveNode={() => onRemoveNode(nodeIndex)}
-          />
-        ))}
-      </div>
+      {layer.nodes.map((node, index) => (
+        <Node key={index} node={node} layerIndex={index} index={index} onRemoveNode={onRemoveNode} />
+      ))}
     </div>
   )
 }

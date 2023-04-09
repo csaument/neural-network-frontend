@@ -1,48 +1,48 @@
 import React, { useState } from 'react'
 import Layer from './Layer'
+import '../App.css'
 
-const NeuralNetwork = () => {
-  const [network, setNetwork] = useState([
-    { nodes: [{}, {}, {}] },
-    { nodes: [{}, {}, {}] },
-    { nodes: [{}, {}, {}] }
-  ])
+function NeuralNetwork() {
+  const [network, setNetwork] = useState({
+    layers: [
+      { nodes: [{}, {}, {}] },
+      { nodes: [{}, {}, {}] },
+      { nodes: [{}, {}, {}] },
+    ],
+  });
 
   const handleAddLayer = () => {
-    setNetwork([...network, { nodes: [{}, {}, {}] }])
+    const newLayer = { nodes: [{}, {}, {}] }
+    setNetwork(prevState => ({ layers: [...prevState.layers, newLayer] }))
   }
 
-  const handleRemoveLayer = (layerIndex) => {
-    const newNetwork = [...network]
-    newNetwork.splice(layerIndex, 1)
-    setNetwork(newNetwork)
+  const handleRemoveLayer = (index) => {
+    setNetwork(prevState => ({ layers: prevState.layers.filter((layer, i) => i !== index) }))
   }
 
-  const handleAddNode = (layerIndex) => {
-    const newNetwork = [...network]
-    newNetwork[layerIndex].nodes.push({})
-    setNetwork(newNetwork)
+  const handleAddNode = (index) => {
+    setNetwork(prevState => ({
+      layers: prevState.layers.map((layer, i) =>
+        i === index ? { ...layer, nodes: [...layer.nodes, {}] } : layer
+      ),
+    }))
   }
 
   const handleRemoveNode = (layerIndex, nodeIndex) => {
-    const newNetwork = [...network]
-    newNetwork[layerIndex].nodes.splice(nodeIndex, 1)
-    setNetwork(newNetwork)
+    setNetwork(prevState => ({
+      layers: prevState.layers.map((layer, i) =>
+        i === layerIndex ? { ...layer, nodes: layer.nodes.filter((node, j) => j !== nodeIndex) } : layer
+      ),
+    }))
   }
 
   return (
-    <div className="neural-network">
-      <div className="network-controls">
-        <button className="add-layer-button" onClick={handleAddLayer}>Add Layer</button>
+    <div>
+      <div>
+        <button onClick={handleAddLayer}>Add Layer</button>
       </div>
-      {network.map((layer, layerIndex) => (
-        <Layer
-          key={layerIndex}
-          nodes={layer.nodes}
-          onRemoveLayer={() => handleRemoveLayer(layerIndex)}
-          onAddNode={() => handleAddNode(layerIndex)}
-          onRemoveNode={(nodeIndex) => handleRemoveNode(layerIndex, nodeIndex)}
-        />
+      {network.layers.map((layer, index) => (
+        <Layer key={index} layer={layer} index={index} onRemoveLayer={handleRemoveLayer} onAddNode={handleAddNode} onRemoveNode={handleRemoveNode} />
       ))}
     </div>
   )
