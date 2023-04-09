@@ -3,12 +3,12 @@ import '../App.css'
 
 const Node = ({ node, layerIndex, index, onRemoveNode }) => {
   const handleRemoveNode = () => {
-    onRemoveNode(layerIndex, index);
-  };
+    onRemoveNode(layerIndex, index)
+  }
 
   return (
     <div>
-      <button onClick={handleRemoveNode}>Remove Node</button>
+      <button onClick={handleRemoveNode}>-</button>
       <div>
         <svg height='20' width='20'>
           <circle cx='10' cy='10' r='10' fill='green' />
